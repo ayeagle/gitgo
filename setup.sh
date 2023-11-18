@@ -1,26 +1,30 @@
-#!/bin/bash
+# #!/bin/bash
 
-# Make the script executable
-chmod +x gitgo
-chmod +x checkurl.sh
+# # Make the script executable
+# chmod +x gitgo
+# chmod +x checkurl.sh
 
-# Get the absolute path to the script's directory using realpath (macOS and Linux compatible)
-SCRIPT_DIR=$(realpath "$(dirname "$0")")
+# # Get the absolute path to the script's directory using realpath (macOS and Linux compatible)
+# SCRIPT_DIR=$(realpath "$(dirname "$0")")
 
-# Check if SCRIPT_DIR is already in the PATH
-if [[ ":$PATH:" != *":$SCRIPT_DIR:"* ]]; then
-    # Append the export PATH line to ~/.zshrc
-    echo 'export PATH="$PATH:'"$SCRIPT_DIR"'"' >>~/.zshrc
+# echo "///////////////////"
+# echo $SCRIPT_DIR
+# echo $PATH
 
-    # Source ~/.zshrc to apply changes to the current shell session
-    source ~/.zshrc
+# # Check if SCRIPT_DIR is already in the PATH
+# if [[ ":$PATH:" != *":$SCRIPT_DIR:"* ]]; then
+#     # Append the export PATH line to ~/.zshrc
+#     echo 'export PATH="$PATH:'"$SCRIPT_DIR"'"' >>~/.zshrc
 
-    source ./gitgologger.sh "Added $SCRIPT_DIR to your PATH in ~/.zshrc"
-else
-    source ./gitgologger.sh "$SCRIPT_DIR already exists in path"
-fi
+#     # Source ~/.zshrc to apply changes to the current shell session
+#     source ~/.zshrc
 
-# Create the .gitgo_repo_url file if it doesn't exist
-touch .gitgo_repo_url
+#     source ./gitgologger.sh "Added $SCRIPT_DIR to your PATH in ~/.zshrc"
+# else
+#     source ./gitgologger.sh "$SCRIPT_DIR already exists in path"
+# fi
 
-url=$(source checkurl.sh)
+# # Create the .gitgo_repo_url file if it doesn't exist
+# touch .gitgo_repo_url
+
+# url=$(source checkurl.sh)
