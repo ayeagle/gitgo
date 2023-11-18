@@ -1,4 +1,3 @@
-
 reboot_message=$(
   cat <<EOF
 \n\n
@@ -46,7 +45,7 @@ gg_log() {
 clear_repo_url() {
   gg_log "Clearing locally set GitHub repository URL..."
   unset GITGO_GITHUB_REPO_URL
-  rm -f .gitgo_repo_url 
+  rm -f .gitgo_repo_url
 }
 
 show_curr_url() {
@@ -127,7 +126,7 @@ elif [ "$1" == "help" ]; then
   show_help
   exit 0
 elif [ -n "$1" ]; then
-  if [ "$#" -eq 1 ]; then
+  if [ "$#" -eq 1 ] && [[ ! "$1" =~ " " ]]; then
     read -p "Are you sure you want this to be your commit message?
 
      $1
