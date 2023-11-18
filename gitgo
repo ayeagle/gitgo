@@ -119,6 +119,19 @@ setup() {
   url=$(source checkurl.sh)
 }
 
+go_go_power_ranger() {
+  url=$(check_url)
+  gg_log "this is the returned URL by gitgo: $url"
+  commit_msg=$1
+
+  # Execute the git commands
+  git add --all
+  git commit --all -m"$commit_msg"
+  git push origin HEAD
+
+  open "$url"
+}
+
 # Check if a special command "clearurl" is passed as an argument
 if [ "$#" -eq 0 ]; then
   gg_log "Have fun!"
@@ -140,18 +153,20 @@ elif [ "$1" == "help" ]; then
   show_help
   exit 0
 elif [ -n "$1" ]; then
-  url=$(check_url)
-  gg_log "this is the returned URL by gitgo: $url"
+  if [ "$#" -eq 0 ]; then
+    read -p "Are you sure you want this to be your commit message "$1"? (Y/N): " response
+    response=$(echo "$response" | tr '[:lower:]' '[:upper:]')
 
-  # Get the argument from the command line
-  commit_msg=$1
-
-  # Execute the git commands
-  git add --all
-  git commit --all -m"$commit_msg"
-  git push origin HEAD
-
-  open "$url"
+    if [ "$response" == "Y" ]; then
+      echo "Confirmed! Proceeding with the argument: $1"
+      go_go_power_ranger $1
+    else
+      echo "Cancelled. Exiting."
+      exit 1
+    fi
+  else
+    go_go_power_ranger $1
+  fi
 else
   gg_log "Bruh that makes no sense... enter 'gitgo help' for more info"
 fi
