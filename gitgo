@@ -8,8 +8,31 @@
 #   echo "GitHub repository URL set as: $GITGO_GITHUB_REPO_URL"
 # fi
 
+# Function to clear the locally set GitHub repository URL
+clear_repo_url() {
+  echo "Clearing locally set GitHub repository URL..."
+  unset GITGO_GITHUB_REPO_URL
+  rm -f ~/.gitgo_repo_url
+}
+
+# Check if a special command "clearurl" is passed as an argument
+if [ "$1" == "clearurl" ]; then
+  clear_repo_url
+  exit 0
+fi
+
 # Load the URL from the file
 GITGO_GITHUB_REPO_URL=$(cat ~/.gitgo_repo_url)
+
+if [ -z "$GITGO_GITHUB_REPO_URL" ]; then
+  # If not set, prompt the user to provide a GitHub repository URL
+  read -p "Oops no repo set for this project. Enter the GitHub repository URL: " user_url
+  # Save the URL to a file
+  echo "$user_url" > ~/.gitgo_repo_url
+  # Save the URL as an environment variable
+  export GITGO_GITHUB_REPO_URL="$user_url"
+  echo "GitHub repository URL set as: $GITGO_GITHUB_REPO_URL"
+fi
 
 
 # Get the argument from the command line
