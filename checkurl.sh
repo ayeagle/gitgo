@@ -12,7 +12,7 @@ check_url() {
     echo "$user_url" > .gitgo_repo_url
     # Save the URL as an environment variable
     export GITGO_GITHUB_REPO_URL="$user_url"
-    echo "GitHub repository URL set as: $GITGO_GITHUB_REPO_URL"
+    # echo "GitHub repository URL set as: $GITGO_GITHUB_REPO_URL"
   fi
 
   # Return the URL
