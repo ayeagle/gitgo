@@ -23,3 +23,7 @@ git push origin HEAD
 open "$url"export PATH="$PATH:/Users/AlexanderYeagle/desktop/gitgo"
 export PATH="$PATH:/Users/AlexanderYeagle/Desktop/gitgo"
 export PATH="$PATH:/Users/AlexanderYeagle/Desktop/gitgo"
+export PATH="$PATH:/Users/AlexanderYeagle/Desktop/gitgo"
+export PATH="$PATH:/Users/AlexanderYeagle/Desktop/gitgo"
+export PATH="$PATH:/Users/AlexanderYeagle/Desktop/gitgo"
+export PATH="$PATH:/Users/AlexanderYeagle/Desktop/gitgo"
