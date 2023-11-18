@@ -130,14 +130,14 @@ elif [ -n "$1" ]; then
     response=$(echo "$response" | tr '[:lower:]' '[:upper:]')
 
     if [ "$response" == "Y" ]; then
-      go_go_power_ranger $1
+      go_go_power_ranger $@
       exit 0
     else
       gg_log "Ok well then bruh that makes no sense... enter 'gitgo help' for more info"
       exit 1
     fi
   else
-    go_go_power_ranger $1
+    go_go_power_ranger $@
     exit 0
   fi
 fi
