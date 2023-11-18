@@ -36,6 +36,6 @@ git commit --all -m"$commit_msg"
 git push origin HEAD
 
 
-open "$GITGO_GITHUB_REPO_URL"
+open "$url"
 
 export PATH="$PATH:/Users/AlexanderYeagle/desktop/gitgo"
