@@ -16,14 +16,14 @@ clear_repo_url() {
 }
 
 show_curr_url() {
-  source ./gitgologger.sh .gitgo_repo_url
+  source ./gitgologger.sh "Current repo set as: $(cat .gitgo_repo_url)"
 }
 
 # Check if a special command "clearurl" is passed as an argument
 if [ "$1" == "clearurl" ]; then
   clear_repo_url
   exit 0
-elif [ "$1" == "clearurl" ]; then
+elif [ "$1" == "currurl" ]; then
   show_curr_url
   exit 0
 fi
