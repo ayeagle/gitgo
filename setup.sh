@@ -17,7 +17,7 @@
 #!/bin/bash
 
 # Make the script executable
-chmod +x gitgo.sh
+chmod +x gitgo
 chmod +x checkurl.sh
 
 # Get the absolute path to the script's directory using realpath (macOS and Linux compatible)

@@ -28,8 +28,6 @@ url=$(source checkurl.sh)
 # Get the argument from the command line
 commit_msg=$1
 
-url="https://github.com/ayeagle"
-
 # Execute the git commands
 git add --all
 git commit --all -m"$commit_msg"
