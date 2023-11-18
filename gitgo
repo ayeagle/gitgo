@@ -12,19 +12,24 @@
 clear_repo_url() {
   source ./gitgologger.sh "Clearing locally set GitHub repository URL..."
   unset GITGO_GITHUB_REPO_URL
-  rm -f .gitgo_repo_url  # Remove the file in the current directory
+  rm -f .gitgo_repo_url # Remove the file in the current directory
+}
+
+show_curr_url() {
+  source ./gitgologger.sh .gitgo_repo_url
 }
 
 # Check if a special command "clearurl" is passed as an argument
 if [ "$1" == "clearurl" ]; then
   clear_repo_url
   exit 0
+elif [ "$1" == "clearurl" ]; then
+  show_curr_url
+  exit 0
 fi
-
 
 url=$(source checkurl.sh)
 source ./gitgologger.sh "this is the returned URL by gitgo: $url"
-
 
 # Get the argument from the command line
 commit_msg=$1
@@ -33,7 +38,6 @@ commit_msg=$1
 git add --all
 git commit --all -m"$commit_msg"
 git push origin HEAD
-
 
 open "$url"
 
