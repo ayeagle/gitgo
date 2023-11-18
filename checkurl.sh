@@ -23,7 +23,7 @@ check_url() {
 url=$(check_url)
 
 # Print the URL for testing (you can remove this line)
-echo "GitHub repository URL: $url"
+# echo "GitHub repository URL: $url"
 
 # Return the URL to the caller (in this case, the 'gitgo' or 'setup.sh' script)
 echo "$url"
