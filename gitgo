@@ -57,10 +57,10 @@ show_help() {
 }
 
 check_url() {
-
   if [ ! -f .gitgo_repo_url ]; then
     touch .gitgo_repo_url
   fi
+
   GITGO_GITHUB_REPO_URL=$(cat .gitgo_repo_url)
 
   if [ -z "$GITGO_GITHUB_REPO_URL" ]; then
@@ -74,14 +74,11 @@ check_url() {
 
 setup() {
   chmod +x gitgo
-
   SCRIPT_DIR=$(realpath "$(dirname "$0")")
 
   if [[ ":$PATH:" != *":$SCRIPT_DIR:"* ]]; then
     echo 'export PATH="$PATH:'"$SCRIPT_DIR"'"' >>~/.zshrc
-
     source ~/.zshrc
-
     gg_log "Added $SCRIPT_DIR to your PATH in ~/.zshrc"
     gg_log "$reboot_message"
   else
@@ -89,7 +86,6 @@ setup() {
   fi
 
   touch .gitgo_repo_url
-
   url=$(source checkurl.sh)
 }
 
@@ -98,7 +94,6 @@ go_go_power_ranger() {
   gg_log "this is the returned URL by gitgo: $url"
   commit_msg=$1
 
-  # Execute the git commands
   git add --all
   git commit --all -m"$commit_msg"
   git push origin HEAD
