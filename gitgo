@@ -139,7 +139,7 @@ elif [ "$1" == "setup" ]; then
 elif [ "$1" == "help" ]; then
   show_help
   exit 0
-else
+elif [ -n "$1" ]; then
   url=$(check_url)
   gg_log "this is the returned URL by gitgo: $url"
 
@@ -152,4 +152,6 @@ else
   git push origin HEAD
 
   open "$url"
+else
+  gg_log "Bruh that makes no sense... enter 'gitgo help' for more info"
 fi
