@@ -23,6 +23,7 @@ fi
 
 
 url=$(source checkurl.sh)
+echo "this is the returned URL by gitgo: $url"
 
 
 # Get the argument from the command line
