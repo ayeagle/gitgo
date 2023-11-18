@@ -12,7 +12,7 @@
 clear_repo_url() {
   echo "Clearing locally set GitHub repository URL..."
   unset GITGO_GITHUB_REPO_URL
-  rm -f ~/.gitgo_repo_url
+  rm -f .gitgo_repo_url  # Remove the file in the current directory
 }
 
 # Check if a special command "clearurl" is passed as an argument
