@@ -20,7 +20,9 @@ git commit --all -m"$commit_msg"
 git push origin HEAD
 
 
-open "$url"export PATH="$PATH:/Users/AlexanderYeagle/desktop/gitgo"
+open "$url"
+
+export PATH="$PATH:/Users/AlexanderYeagle/desktop/gitgo"
 export PATH="$PATH:/Users/AlexanderYeagle/Desktop/gitgo"
 export PATH="$PATH:/Users/AlexanderYeagle/Desktop/gitgo"
 export PATH="$PATH:/Users/AlexanderYeagle/Desktop/gitgo"
