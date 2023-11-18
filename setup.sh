@@ -23,7 +23,7 @@ chmod +x checkurl.sh
 # Get the absolute path to the script's directory using realpath (macOS and Linux compatible)
 SCRIPT_DIR=$(realpath "$(dirname "$0")")
 
-echo "Abs path recorded: $SCRIPT_DIR"
+source ./gitgologger.sh "Abs path recorded: $SCRIPT_DIR"
 
 # Append the export PATH line to ~/.zshrc
 echo 'export PATH="$PATH:'"$SCRIPT_DIR"'"' >> ~/.zshrc
@@ -31,7 +31,7 @@ echo 'export PATH="$PATH:'"$SCRIPT_DIR"'"' >> ~/.zshrc
 # Source ~/.zshrc to apply changes to the current shell session
 source ~/.zshrc
 
-echo "Added $SCRIPT_DIR to your PATH in ~/.zshrc"
+source ./gitgologger.sh "Added $SCRIPT_DIR to your PATH in ~/.zshrc"
 touch .gitgo_repo_url
 
 

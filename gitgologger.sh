@@ -1,0 +1,1 @@
+echo "GITGO_LOGS: $1"

@@ -10,7 +10,7 @@
 
 # Function to clear the locally set GitHub repository URL
 clear_repo_url() {
-  echo "Clearing locally set GitHub repository URL..."
+  source ./gitgologger.sh "Clearing locally set GitHub repository URL..."
   unset GITGO_GITHUB_REPO_URL
   rm -f .gitgo_repo_url  # Remove the file in the current directory
 }
@@ -23,7 +23,7 @@ fi
 
 
 url=$(source checkurl.sh)
-echo "this is the returned URL by gitgo: $url"
+source ./gitgologger.sh "this is the returned URL by gitgo: $url"
 
 
 # Get the argument from the command line
