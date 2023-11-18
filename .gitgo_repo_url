@@ -1,1 +1,1 @@
-https://github.com/ayeagle/gitgo
+if [ ! -f .gitgo_repo_url ]; then
