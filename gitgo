@@ -92,7 +92,7 @@ setup() {
 go_go_power_ranger() {
   url=$(check_url)
   gg_log "this is the returned URL by gitgo: $url"
-  commit_msg=$1
+  commit_msg=$@
 
   git add --all
   git commit --all -m"$commit_msg"
