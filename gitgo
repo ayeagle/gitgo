@@ -8,16 +8,45 @@
 #   echo "GitHub repository URL set as: $GITGO_GITHUB_REPO_URL"
 # fi
 
+gg_log(){
+  echo "GITGO_LOGS: $1"
+}
+
 # Function to clear the locally set GitHub repository URL
 clear_repo_url() {
-  source ./gitgologger.sh "Clearing locally set GitHub repository URL..."
+  gg_log "Clearing locally set GitHub repository URL..."
   unset GITGO_GITHUB_REPO_URL
   rm -f .gitgo_repo_url # Remove the file in the current directory
 }
 
 show_curr_url() {
-  source ./gitgologger.sh "Current repo set as: $(cat .gitgo_repo_url)"
+  gg_log "Current repo set as: $(cat .gitgo_repo_url)"
 }
+
+# Function to check and manage the repository URL
+check_url() {
+
+  if [ ! -f .gitgo_repo_url ]; then
+    touch .gitgo_repo_url
+  fi
+  # Load the URL from the .gitgo_repo_url file in the current directory
+  GITGO_GITHUB_REPO_URL=$(cat .gitgo_repo_url)
+
+  if [ -z "$GITGO_GITHUB_REPO_URL" ]; then
+    # If not set, prompt the user to provide a GitHub repository URL
+    read -p "Enter the GitHub repository URL: " user_url
+    # Save the URL to the .gitgo_repo_url file in the current directory
+    echo "$user_url" >.gitgo_repo_url
+    # Save the URL as an environment variable
+    export GITGO_GITHUB_REPO_URL="$user_url"
+    # echo "GitHub repository URL set as: $GITGO_GITHUB_REPO_URL"
+  fi
+
+  # Return the URL
+  echo "$GITGO_GITHUB_REPO_URL"
+}
+
+
 
 # Check if a special command "clearurl" is passed as an argument
 if [ "$1" == "clearurl" ]; then
@@ -28,8 +57,8 @@ elif [ "$1" == "currurl" ]; then
   exit 0
 fi
 
-url=$(source checkurl.sh)
-source ./gitgologger.sh "this is the returned URL by gitgo: $url"
+url=$(checkurl)
+gg_log "this is the returned URL by gitgo: $url"
 
 # Get the argument from the command line
 commit_msg=$1
@@ -42,3 +71,4 @@ git push origin HEAD
 open "$url"
 
 export PATH="$PATH:/Users/AlexanderYeagle/desktop/gitgo"
+
