@@ -42,12 +42,6 @@ gg_log() {
   echo "\x1b[1m\x1b[44m\033[92mGITGO:\033[0m $1" >&2
 }
 
-# clear_repo_url() {
-#   gg_log "Clearing locally set GitHub repository URL..."
-#   unset GITGO_GITHUB_REPO_URL
-#   rm -f .gitgo_repo_url
-# }
-
 show_curr_url() {
   url=$(get_github_url)
 }
@@ -55,25 +49,6 @@ show_curr_url() {
 show_help() {
   gg_log "$help_message"
 }
-
-# check_url() {
-#   # url=$(get_github_url)
-
-#   # if [ ! -f .gitgo_repo_url ]; then
-#   #   touch .gitgo_repo_url
-#   # fi
-
-#   # GITGO_GITHUB_REPO_URL=$(cat .gitgo_repo_url)
-#    url=$(get_github_url)
-
-#   if [ -z "$url" ]; then
-#     read -p "Enter the GitHub repository URL: " user_url
-#     echo "$user_url" >.gitgo_repo_url
-#     export GITGO_GITHUB_REPO_URL="$user_url"
-#   fi
-
-#   echo "$url"
-# }
 
 setup() {
   chmod +x gitgo
@@ -87,9 +62,6 @@ setup() {
   else
     gg_log "$SCRIPT_DIR already exists in path. Nothing to do..."
   fi
-
-  # touch .gitgo_repo_url
-  # url=$(get_github_url)
 }
 
 go_go_power_ranger() {
@@ -139,20 +111,6 @@ convert_ssh_to_https() {
   echo $https_url_with_branch
 }
 
-# get_current_git_repository_name() {
-#   local repo_path
-#   local repo_name
-#   get_remote_origin_url
-
-#   repo_path=$(git rev-parse --show-toplevel 2>/dev/null)
-#   if [ $? -eq 0 ]; then
-#     repo_name=$(basename "$repo_path")
-#     echo "$repo_name"
-#   else
-#     gg_log "Not in a Git repository. Please navigate to the proper directory or create one with \"git init\"."
-#     exit 0
-#   fi
-# }
 
 is_inside_git_repository() {
   if [ -n "$(git rev-parse --is-inside-work-tree 2>/dev/null)" ]; then
@@ -163,8 +121,6 @@ is_inside_git_repository() {
   fi
 }
 
-# ssh_url=$(get_remote_origin_url)
-# https_url=$(convert_ssh_to_https "$ssh_url")
 
 if [ "$#" -eq 0 ]; then
   gg_log "Have fun!"
