@@ -1,7 +1,24 @@
-# gitgo
+One command git interface for when you just want to commit everything.
 
-Navigate to the gitgo folder in your terminal and run:
+Lazy engineers only!
 
-sh gitgo setup
+1. Clone repo
+```shell
+git clone git@github.com:ayeagle/gitgo.git && cd gitgo
+```
 
-Only runs on zsh at the moment
+2. Setup to install the script in your env path (only works with zsh atm)
+```shell
+./gitgo setup
+```
+
+3. Refresh path
+```shell
+source ~./zshrc
+```
+4. See available commands
+```shell
+gitgo help
+```
+
+Have fun! Saves at LEAST 5 seconds per commit.
