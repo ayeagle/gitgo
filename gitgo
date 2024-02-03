@@ -69,9 +69,9 @@ go_go_power_ranger() {
   gg_log "this is the returned URL by gitgo: $url"
   commit_msg=$@
 
-  git add --all
-  git commit --all -m"$commit_msg"
-  git push origin HEAD
+  gg_log $(git add --all)
+  gg_log $(git commit --all -m"$commit_msg")
+  gg_log $(git push origin HEAD)
 
   open "$url"
 }
