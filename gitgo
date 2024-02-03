@@ -5,7 +5,7 @@ reboot_message=$(
 ///////////////////////////////////////////////////////
 \nPlease restart your terminal to apply changes
                    OR
-run the following to apply changes: $ \033[92msource ~/.zshrc\033[0m
+run the following to apply changes: $ \x1b[1m\033[92msource ~/.zshrc\033[0m
 \n///////////////////////////////////////////////////////
 *******************************************************
 \n\n
@@ -53,10 +53,19 @@ show_help() {
 setup() {
   chmod +x gitgo
   SCRIPT_DIR=$(realpath "$(dirname "$0")")
-
   if [[ ":$PATH:" != *":$SCRIPT_DIR:"* ]]; then
     echo 'export PATH="$PATH:'"$SCRIPT_DIR"'"' >>~/.zshrc
-    source ~/.zshrc
+    gg_log "Your new Zsh shell config"
+    gg_log "*******************************************************"
+    file_path=~/.zshrc
+    if [ -e "$file_path" ]; then
+      while IFS= read -r line; do
+        gg_log "$line"
+      done <"$file_path"
+    else
+      echo "File not found: $file_path"
+    fi
+    gg_log "*******************************************************"
     gg_log "Added $SCRIPT_DIR to your PATH in ~/.zshrc"
     gg_log "$reboot_message"
   else
@@ -69,9 +78,9 @@ go_go_power_ranger() {
   gg_log "this is the returned URL by gitgo: $url"
   commit_msg=$@
 
-  gg_log "$(git add --all)"
-  gg_log "$(git commit --all -m"$commit_msg")"
-  gg_log "$(git push origin HEAD)"
+  git add --all
+  git commit --all -m"$commit_msg"
+  git push origin HEAD
 
   open "$url"
 }
@@ -111,7 +120,6 @@ convert_ssh_to_https() {
   echo $https_url_with_branch
 }
 
-
 is_inside_git_repository() {
   if [ -n "$(git rev-parse --is-inside-work-tree 2>/dev/null)" ]; then
     gg_log "Git repo found. Noice."
@@ -120,7 +128,6 @@ is_inside_git_repository() {
     exit 0
   fi
 }
-
 
 if [ "$#" -eq 0 ]; then
   gg_log "Have fun!"
@@ -163,7 +170,7 @@ elif [ -n "$1" ]; then
     gg_log "$1"
     gg_log ""
     gg_log "(Y/N):"
-    read -p "" response -r
+    read -p "" response
 
     response=$(echo "$response" | tr '[:lower:]' '[:upper:]')
 
