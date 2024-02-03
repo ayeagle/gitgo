@@ -57,6 +57,7 @@ setup() {
     echo 'export PATH="$PATH:'"$SCRIPT_DIR"'"' >>~/.zshrc
     gg_log "Your new Zsh shell config"
     gg_log "*******************************************************"
+    gg_log ""
     file_path=~/.zshrc
     if [ -e "$file_path" ]; then
       while IFS= read -r line; do
@@ -65,8 +66,8 @@ setup() {
     else
       echo "File not found: $file_path"
     fi
+    gg_log ""
     gg_log "*******************************************************"
-    gg_log "Added $SCRIPT_DIR to your PATH in ~/.zshrc"
     gg_log "$reboot_message"
   else
     gg_log "$SCRIPT_DIR already exists in path. Nothing to do..."
