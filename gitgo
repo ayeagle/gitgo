@@ -1,0 +1,225 @@
+reboot_message=$(
+  cat <<EOF
+\n\n
+*******************************************************
+///////////////////////////////////////////////////////
+\nPlease restart your terminal to apply changes
+                   OR
+run the following to apply changes: $ \033[92msource ~/.zshrc\033[0m
+\n///////////////////////////////////////////////////////
+*******************************************************
+\n\n
+EOF
+)
+
+help_message=$(
+  cat <<EOF
+
+*******************************************************
+///////////////////////////////////////////////////////
+
+Gitgo is a small set of functions to perform the following tasks in one command:
+-- Add all changes to a commit
+-- Commit those changes with a message
+-- Open your GitHub repo for review or merging
+
+All commands start with "gitgo" followed by the following arguments:
+-- No arguments will open your GitHub repo
+-- \033[92m"commit message"\033[0m commits all changes with your message
+-- \033[92mclearurl\033[0m removes your linked repo
+-- \033[92mcurrurl\033[0m shows the currently linked repo
+-- \033[92msetup\033[0m sets up your environment
+
+Hope this helps! Dont break anything 
+
+///////////////////////////////////////////////////////
+*******************************************************
+
+EOF
+)
+
+gg_log() {
+  echo "\x1b[1m\x1b[44m\033[92mGITGO:\033[0m $1" >&2
+}
+
+# clear_repo_url() {
+#   gg_log "Clearing locally set GitHub repository URL..."
+#   unset GITGO_GITHUB_REPO_URL
+#   rm -f .gitgo_repo_url
+# }
+
+show_curr_url() {
+  url=$(get_github_url)
+}
+
+show_help() {
+  gg_log "$help_message"
+}
+
+# check_url() {
+#   # url=$(get_github_url)
+
+#   # if [ ! -f .gitgo_repo_url ]; then
+#   #   touch .gitgo_repo_url
+#   # fi
+
+#   # GITGO_GITHUB_REPO_URL=$(cat .gitgo_repo_url)
+#    url=$(get_github_url)
+
+#   if [ -z "$url" ]; then
+#     read -p "Enter the GitHub repository URL: " user_url
+#     echo "$user_url" >.gitgo_repo_url
+#     export GITGO_GITHUB_REPO_URL="$user_url"
+#   fi
+
+#   echo "$url"
+# }
+
+setup() {
+  chmod +x gitgo
+  SCRIPT_DIR=$(realpath "$(dirname "$0")")
+
+  if [[ ":$PATH:" != *":$SCRIPT_DIR:"* ]]; then
+    echo 'export PATH="$PATH:'"$SCRIPT_DIR"'"' >>~/.zshrc
+    source ~/.zshrc
+    gg_log "Added $SCRIPT_DIR to your PATH in ~/.zshrc"
+    gg_log "$reboot_message"
+  else
+    gg_log "$SCRIPT_DIR already exists in path. Nothing to do..."
+  fi
+
+  # touch .gitgo_repo_url
+  # url=$(get_github_url)
+}
+
+go_go_power_ranger() {
+  url=$(get_github_url)
+  gg_log "this is the returned URL by gitgo: $url"
+  commit_msg=$@
+
+  git add --all
+  git commit --all -m"$commit_msg"
+  git push origin HEAD
+
+  open "$url"
+}
+
+get_branch() {
+  current_branch=$(git branch --show-current)
+  echo "$current_branch"
+}
+
+get_remote_origin_url() {
+  local remote_url
+  remote_url=$(git remote get-url origin)
+
+  if [ -n "$remote_url" ]; then
+    echo "$remote_url"
+  else
+    gg_log "Remote origin URL not found."
+  fi
+}
+
+get_github_url() {
+  is_inside_git_repository
+  ssh_url=$(get_remote_origin_url)
+  gg_log "Remote origin found: $ssh_url"
+  https_url=$(convert_ssh_to_https "$ssh_url")
+  gg_log "Linked https redirection url: $https_url"
+  echo $https_url
+}
+
+convert_ssh_to_https() {
+  local ssh_url="$1"
+  https_url=$(echo "$ssh_url" | sed 's/^git@\(.*\):/https:\/\/\1\//')
+  https_url_with_branch_no_dot_git=$(echo "$https_url" | sed 's/\.git$//')
+
+  current_branch=$(git branch --show-current)
+  https_url_with_branch="$https_url_with_branch_no_dot_git/tree/$current_branch"
+  echo $https_url_with_branch
+}
+
+# get_current_git_repository_name() {
+#   local repo_path
+#   local repo_name
+#   get_remote_origin_url
+
+#   repo_path=$(git rev-parse --show-toplevel 2>/dev/null)
+#   if [ $? -eq 0 ]; then
+#     repo_name=$(basename "$repo_path")
+#     echo "$repo_name"
+#   else
+#     gg_log "Not in a Git repository. Please navigate to the proper directory or create one with \"git init\"."
+#     exit 0
+#   fi
+# }
+
+is_inside_git_repository() {
+  if [ -n "$(git rev-parse --is-inside-work-tree 2>/dev/null)" ]; then
+    gg_log "Git repo found. Noice."
+  else
+    gg_log "Git repo not found. Please create one with \"git init\""
+    exit 0
+  fi
+}
+
+# ssh_url=$(get_remote_origin_url)
+# https_url=$(convert_ssh_to_https "$ssh_url")
+
+if [ "$#" -eq 0 ]; then
+  gg_log "Have fun!"
+  url=$(get_github_url)
+  open "$url"
+elif [ "$#" -gt 1 ]; then
+
+  args="$*"
+
+  gg_log "Are you sure you want this to be your commit message?"
+  gg_log ""
+  gg_log "$args"
+  gg_log ""
+  gg_log "(Y/N):"
+  read -p "" response
+
+  response=$(echo "$response" | tr '[:lower:]' '[:upper:]')
+
+  if [ "$response" == "Y" ]; then
+    go_go_power_ranger $@
+    exit 0
+  else
+    gg_log "Ok well then bruh that makes no sense... enter 'gitgo help' for more info"
+    exit 1
+  fi
+elif [ "$1" == "currurl" ]; then
+  show_curr_url
+  exit 0
+elif [ "$1" == "setup" ]; then
+  setup
+  exit 0
+elif [ "$1" == "help" ]; then
+  show_help
+  exit 0
+elif [ -n "$1" ]; then
+  if [ "$#" -eq 1 ] && [[ ! "$1" =~ " " ]]; then
+
+    gg_log "Are you sure you want this to be your commit message?"
+    gg_log ""
+    gg_log "$1"
+    gg_log ""
+    gg_log "(Y/N):"
+    read -p "" response -r
+
+    response=$(echo "$response" | tr '[:lower:]' '[:upper:]')
+
+    if [ "$response" == "Y" ]; then
+      go_go_power_ranger $@
+      exit 0
+    else
+      gg_log "Ok well then bruh that makes no sense... enter 'gitgo help' for more info"
+      exit 1
+    fi
+  else
+    go_go_power_ranger $@
+    exit 0
+  fi
+fi
