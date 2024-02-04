@@ -1,3 +1,9 @@
+#!/bin/sh
+
+BIN_DIRECTORY="/usr/local/bin"
+SCRIPT_DIRECTORY="$(realpath "$(dirname "$0")")"
+SCRIPT_NAME=$(basename "$0")
+
 reboot_message=$(
   cat <<EOF
 \n\n
@@ -14,18 +20,18 @@ EOF
 
 help_message=$(
   cat <<EOF
-
+  
 *******************************************************
 ///////////////////////////////////////////////////////
 
-Gitgo is a small set of functions to perform the following tasks in one command:
+$SCRIPT_NAME is a small set of functions to perform the following tasks in one command:
 -- Add all changes to a commit
 -- Commit those changes with a message
 -- Open your GitHub repo for review or merging
 
-All commands start with "gitgo" followed by the following arguments:
+All commands start with "$SCRIPT_NAME" followed by the following arguments:
 -- No arguments will open your GitHub repo
--- \033[92m"commit message"\033[0m commits all changes with your message
+-- \033[92m\"commit message\"\033[0m commits all changes with your message
 -- \033[92mclearurl\033[0m removes your linked repo
 -- \033[92mcurrurl\033[0m shows the currently linked repo
 -- \033[92msetup\033[0m sets up your environment
@@ -39,7 +45,15 @@ EOF
 )
 
 gg_log() {
-  echo "\x1b[1m\x1b[44m\033[92mGITGO:\033[0m $1" >&2
+  printf "\n\x1b[1m\x1b[44m\033[92m$SCRIPT_NAME:\033[0m $1" >&2
+}
+
+config() {
+  gg_log "Bin/script target directory:    $BIN_DIRECTORY"
+  gg_log "Script source directory:        $SCRIPT_DIRECTORY"
+  gg_log "Script current name:            $SCRIPT_NAME"
+  url=$(get_github_url)
+  printf "\n\n"
 }
 
 show_curr_url() {
@@ -47,14 +61,13 @@ show_curr_url() {
 }
 
 show_help() {
-  gg_log "$help_message"
+  printf "$help_message"
 }
 
-setup() {
-  chmod +x gitgo
-  SCRIPT_DIR=$(realpath "$(dirname "$0")")
-  if [[ ":$PATH:" != *":$SCRIPT_DIR:"* ]]; then
-    echo 'export PATH="$PATH:'"$SCRIPT_DIR"'"' >>~/.zshrc
+path_setup() {
+  chmod +x $SCRIPT_NAME
+  if [[ ":$PATH:" != *":$SCRIPT_DIRECTORY:"* ]]; then
+    echo 'export PATH="$PATH:'"$SCRIPT_DIRECTORY"'"' >>~/.zshrc
     gg_log "Your new Zsh shell config"
     gg_log "*******************************************************"
     gg_log ""
@@ -70,13 +83,59 @@ setup() {
     gg_log "*******************************************************"
     gg_log "$reboot_message"
   else
-    gg_log "$SCRIPT_DIR already exists in path. Nothing to do..."
+    gg_log "$SCRIPT_DIRECTORY already exists in path. Nothing to do..."
+  fi
+}
+
+bin_setup() {
+  chmod +x $SCRIPT_NAME
+
+  gg_log $BIN_DIRECTORY
+  gg_log "$SCRIPT_DIRECTORY/$SCRIPT_NAME"
+
+  if [ -e "$BIN_DIRECTORY/$SCRIPT_NAME" ]; then
+    gg_log "Already installed -- you can already use $SCRIPT_NAME from anywhere!"
+    gg_log "\n$help_message"
+  else
+    sudo ln -s "$SCRIPT_DIRECTORY/$SCRIPT_NAME" $BIN_DIRECTORY
+    gg_log "Successfully added to bin -- you can now use $SCRIPT_NAME from anywhere!"
+    gg_log "\n$help_message"
+  fi
+}
+
+uninstall() {
+
+  if [ -e "$0" ] && [ "$0" != "./$SCRIPT_NAME" ]; then
+
+    gg_log "\033[31mThis will delete the file at:"
+    gg_log ""
+    gg_log "\033[31m$SCRIPT_DIRECTORY/$SCRIPT_NAME"
+    gg_log ""
+    gg_log "\033[31mDo you wish to proceed?"
+    gg_log ""
+    gg_log "(Y/N):"
+    read -p "" response
+
+    response=$(echo "$response" | tr '[:lower:]' '[:upper:]')
+
+    if [ "$response" == "Y" ]; then
+      sudo rm $SCRIPT_DIRECTORY/$SCRIPT_NAME
+      gg_log "Successfully uninstalled -- thanks for using $SCRIPT_NAME :)"
+      gg_log "To reinstall run \033[92m ./$SCRIPT_NAME bin_setup"
+      exit 1
+    else
+      gg_log "Uninstallation cancelled -- happy committing!"
+      exit 1
+    fi
+  else
+    gg_log "$SCRIPT_NAME not installed. To set up run ==> \033[92m ./$SCRIPT_NAME bin_setup"
+    exit 1
   fi
 }
 
 go_go_power_ranger() {
   url=$(get_github_url)
-  gg_log "this is the returned URL by gitgo: $url"
+  gg_log "this is the returned URL by $SCRIPT_NAME: $url"
   commit_msg=$@
 
   git add --all
@@ -105,9 +164,9 @@ get_remote_origin_url() {
 get_github_url() {
   is_inside_git_repository
   ssh_url=$(get_remote_origin_url)
-  gg_log "Remote origin found: $ssh_url"
+  gg_log "Remote origin url:              $ssh_url"
   https_url=$(convert_ssh_to_https "$ssh_url")
-  gg_log "Linked https redirection url: $https_url"
+  gg_log "Linked https redirection url:   $https_url"
   echo $https_url
 }
 
@@ -123,7 +182,7 @@ convert_ssh_to_https() {
 
 is_inside_git_repository() {
   if [ -n "$(git rev-parse --is-inside-work-tree 2>/dev/null)" ]; then
-    gg_log "Git repo found. Noice."
+    gg_log "Inside git repo:                true"
   else
     gg_log "Git repo not found. Please create one with \"git init\""
     exit 0
@@ -151,14 +210,23 @@ elif [ "$#" -gt 1 ]; then
     go_go_power_ranger $@
     exit 0
   else
-    gg_log "Ok well then bruh that makes no sense... enter 'gitgo help' for more info"
+    gg_log "Ok well then bruh that makes no sense... enter '$SCRIPT_NAME help' for more info"
     exit 1
   fi
 elif [ "$1" == "currurl" ]; then
   show_curr_url
   exit 0
-elif [ "$1" == "setup" ]; then
-  setup
+elif [ "$1" == "path_setup" ]; then
+  path_setup
+  exit 0
+elif [ "$1" == "config" ]; then
+  config
+  exit 0
+elif [ "$1" == "bin_setup" ]; then
+  bin_setup
+  exit 0
+elif [ "$1" == "uninstall" ]; then
+  uninstall
   exit 0
 elif [ "$1" == "help" ]; then
   show_help
@@ -179,7 +247,7 @@ elif [ -n "$1" ]; then
       go_go_power_ranger $@
       exit 0
     else
-      gg_log "Ok well then bruh that makes no sense... enter 'gitgo help' for more info"
+      gg_log "Ok well then bruh that makes no sense... enter '$SCRIPT_NAME help' for more info"
       exit 1
     fi
   else
