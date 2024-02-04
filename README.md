@@ -7,9 +7,9 @@ Lazy engineers only!
 git clone git@github.com:ayeagle/gitgo.git && cd gitgo
 ```
 
-2. Setup to install the script in your env path (only works with zsh atm)
+2. Setup to install the script in /usr/local/bin/
 ```shell
-./gitgo setup
+chmod +x gitgo && ./gitgo bin_setup
 ```
 
 3. Refresh path
