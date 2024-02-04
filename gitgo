@@ -32,20 +32,24 @@ $SCRIPT_NAME is a small set of functions to perform the following tasks in one c
 All commands start with "$SCRIPT_NAME" followed by the following arguments:
 -- No arguments will open your GitHub repo
 -- \033[92m\"commit message\"\033[0m commits all changes with your message
--- \033[92mclearurl\033[0m removes your linked repo
+-- \033[92mcommit message without quotes\033[0m commits all changes with your message, after confirmation
+-- \033[92mconfig\033[0m shows the relevant gitgo config info
 -- \033[92mcurrurl\033[0m shows the currently linked repo
--- \033[92msetup\033[0m sets up your environment
+-- \033[92mpath_setup\033[0m sets up your environment via env path
+-- \033[92msetup\033[0m sets up your environment by adding directly to /usr/local/bin/
+-- \033[92muninstall\033[0m removes $SCRIPT_NAME from /usr/local/bin/
+
+Fun fact -- you can rename this file from $SCRIPT_NAME to anything you\'d like and use that as the command instead of gitgo.
 
 Hope this helps! Dont break anything 
 
 ///////////////////////////////////////////////////////
 *******************************************************
-
 EOF
 )
 
 gg_log() {
-  printf "\n\x1b[1m\x1b[44m\033[92m$SCRIPT_NAME:\033[0m $1" >&2
+  printf "\x1b[1m\x1b[44m\033[92m$SCRIPT_NAME:\033[0m $1\n" >&2
 }
 
 config() {
@@ -53,7 +57,6 @@ config() {
   gg_log "Script source directory:        $SCRIPT_DIRECTORY"
   gg_log "Script current name:            $SCRIPT_NAME"
   url=$(get_github_url)
-  printf "\n\n"
 }
 
 show_curr_url() {
@@ -88,14 +91,8 @@ path_setup() {
 }
 
 bin_setup() {
-  chmod +x $SCRIPT_NAME
-
-  gg_log $BIN_DIRECTORY
-  gg_log "$SCRIPT_DIRECTORY/$SCRIPT_NAME"
-
   if [ -e "$BIN_DIRECTORY/$SCRIPT_NAME" ]; then
     gg_log "Already installed -- you can already use $SCRIPT_NAME from anywhere!"
-    gg_log "\n$help_message"
   else
     sudo ln -s "$SCRIPT_DIRECTORY/$SCRIPT_NAME" $BIN_DIRECTORY
     gg_log "Successfully added to bin -- you can now use $SCRIPT_NAME from anywhere!"
