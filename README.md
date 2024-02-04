@@ -12,11 +12,7 @@ git clone git@github.com:ayeagle/gitgo.git && cd gitgo
 chmod +x gitgo && ./gitgo bin_setup
 ```
 
-3. Refresh path
-```shell
-source ~./zshrc
-```
-4. See available commands
+3. See available commands
 ```shell
 gitgo help
 ```
