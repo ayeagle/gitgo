@@ -1,4 +1,4 @@
-One command git interface for when you just want to commit everything.
+One command git interface for when you just want to commit everything and open the github page.
 
 Lazy engineers only!
 
