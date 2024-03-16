@@ -36,7 +36,7 @@ All commands start with "$SCRIPT_NAME" followed by the following arguments:
 -- \033[92mconfig\033[0m shows the relevant gitgo config info
 -- \033[92mcurrurl\033[0m shows the currently linked repo
 -- \033[92mpath_setup\033[0m sets up your environment via env path
--- \033[92msetup\033[0m sets up your environment by adding directly to /usr/local/bin/
+-- \033[92mbin_setup\033[0m sets up your environment by adding directly to /usr/local/bin/
 -- \033[92muninstall\033[0m removes $SCRIPT_NAME from /usr/local/bin/
 
 Fun fact -- you can rename this file from $SCRIPT_NAME to anything you\'d like and use that as the command instead of gitgo.
