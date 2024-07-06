@@ -21,4 +21,4 @@ That's it! Now you can use gitgo with any git project on your machine.
 
 Note that your commit message can be wrapped in quotes or just written like additional arguments, but without quotes you'll be prompted before gitgoing.
 
-Have fun! Saves at LEAST 5 seconds per commit.
+Have fun! Saves AT LEAST 5 seconds per commit.
